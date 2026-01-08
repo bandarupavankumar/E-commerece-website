@@ -1,4 +1,4 @@
-# 🍼 BabyShop - Full Stack E-Commerce Platform
+# BabyShop - Full Stack E-Commerce Platform
 
 A modern, full-featured e-commerce platform built with Next.js, React, Node.js, and MongoDB. Perfect for baby products and kids' essentials with a comprehensive admin dashboard and customer-facing storefront.
 
