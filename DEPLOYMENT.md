@@ -68,9 +68,24 @@ We will deploy the `admin` folder to Vercel (separate project).
 
 ---
 
-## 5. 🔄 Final Configuration
+## 5. 🔄 Post-Deployment: Connecting Everything
 
-1.  Go back to **Render (Backend)** Dashboard -> Environment Variables.
-2.  Update `CLIENT_URL` with your actual Vercel Client URL.
-3.  Update `ADMIN_URL` with your actual Vercel Admin URL.
-4.  **Redeploy** the backend (Manual Deploy -> Clear cache and deploy) to apply changes.
+After deploying all three parts, you must link them together for everything to work correctly.
+
+### Step 1: Update Backend (Render)
+1.  Go to your **Vercel Dashboard** and copy the **Domains** for your deployed **Client** (e.g., `babyshop-client.vercel.app`) and **Admin** (e.g., `babyshop-admin.vercel.app`).
+2.  Go to **Render Dashboard** -> Select your Server -> **Environment**.
+3.  Edit `CLIENT_URL` -> Paste your **Client URL**.
+4.  Edit `ADMIN_URL` -> Paste your **Admin URL**.
+5.  **Save Changes**.
+6.  **IMPORTANT:** Click **Manual Deploy** -> **Deploy latest commit** to apply these new variables.
+
+### Step 2: Update Frontend & Admin (Vercel)
+*Usually, you set the API URL during creation, but if you need to change it:*
+
+1.  Go to **Vercel Dashboard** -> Select your Project (Client or Admin).
+2.  Click **Settings** -> **Environment Variables**.
+3.  Find `NEXT_PUBLIC_API_URL` (for Client) or `VITE_API_URL` (for Admin).
+4.  Click **Edit** (pencil icon) and update the value to your **Render Backend URL**.
+5.  **Save**.
+6.  **IMPORTANT:** Go to **Deployments** tab -> Click the three dots on the latest deployment -> **Redeploy**. (Environment variables only update on redeploy!).
