@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-  apiVersion: "2025-06-30.basil",
-});
+const stripe = process.env.STRIPE_SECRET_KEY
+  ? new Stripe(process.env.STRIPE_SECRET_KEY, {
+    apiVersion: "2025-06-30.basil",
+  })
+  : null;
 
 interface CheckoutItem {
   name: string;
@@ -16,6 +18,14 @@ interface CheckoutItem {
 
 export async function POST(request: NextRequest) {
   try {
+    if (!stripe) {
+      console.error("Stripe is not initialized. Missing STRIPE_SECRET_KEY.");
+      return NextResponse.json(
+        { error: "Stripe configuration error" },
+        { status: 500 }
+      );
+    }
+
     const { items, successUrl, cancelUrl, customerEmail, metadata } =
       await request.json();
 
