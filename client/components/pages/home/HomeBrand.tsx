@@ -30,7 +30,7 @@ const HomeBrand = ({ brands }: Props) => {
             className="flex flex-col items-center justify-center"
           >
             <Image
-              src={brand?.image as string}
+              src={brand?.image || "https://placehold.co/250x250"}
               alt="brandImage"
               width={250}
               height={250}

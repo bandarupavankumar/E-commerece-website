@@ -22,6 +22,7 @@ import analyticsRoutes from "./routes/analyticsRoutes.js";
 // Load env vars
 dotenv.config();
 
+
 // Connect to database
 connectDB();
 

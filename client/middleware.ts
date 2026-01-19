@@ -14,7 +14,8 @@ export async function middleware(request: NextRequest) {
       const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/profile`,
+        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api"
+        }/auth/profile`,
         {
           method: "GET",
           headers: {
@@ -60,6 +61,10 @@ export async function middleware(request: NextRequest) {
 
   // Protect /user routes
   if (pathname.startsWith("/user")) {
+    if (pathname === "/user/cart") {
+      // Allow access to cart page even if not authenticated
+      return NextResponse.next();
+    }
     if (!isAuthenticated) {
       console.log(
         "Middleware: Redirecting unauthenticated user to /auth/signin"

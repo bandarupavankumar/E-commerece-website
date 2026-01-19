@@ -11,6 +11,7 @@ import { Product } from "@/type";
 import { Box, Eye, FileQuestion, Share2, Star, Truck } from "lucide-react";
 import Image from "next/image";
 import React from "react";
+import ProductGallery from "@/components/pages/product/ProductGallery";
 
 const ProductDetails = async ({
   params,
@@ -39,12 +40,7 @@ const ProductDetails = async ({
       <Container>
         <div className="max-w-screen-xl bg-babyshopWhite shadow-babyshopBlack/10 shadow-sm border border-babyshopTextLight/30 rounded-xl grid grid-cols-1 md:grid-cols-2 gap-10 p-5 md:p-10">
           <div>
-            <Image
-              src={product?.image}
-              alt="productImage"
-              width={500}
-              height={500}
-            />
+            <ProductGallery product={product} />
           </div>
           <div className="flex flex-col gap-5">
             {/* discountBadge */}

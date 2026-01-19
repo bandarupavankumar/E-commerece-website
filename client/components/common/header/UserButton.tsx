@@ -42,7 +42,7 @@ const UserButton = () => {
         <p className="font-semibold text-sm">
           {isAuthenticated && authUser
             ? authUser.name || "My Profile"
-            : "Sign in / Register"}
+            : "Sign in & Register"}
         </p>
       </span>
     </Link>

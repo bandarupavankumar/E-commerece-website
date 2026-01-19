@@ -100,6 +100,7 @@ const createProduct = asyncHandler(async (req, res) => {
     category,
     brand,
     image,
+    images,
     discountPercentage,
     stock,
   } = req.body;
@@ -116,6 +117,16 @@ const createProduct = asyncHandler(async (req, res) => {
     folder: "admin-dashboard/products",
   });
 
+  let imageUrls = [];
+  if (images && images.length > 0) {
+    for (const img of images) {
+      const result = await cloudinary.uploader.upload(img, {
+        folder: "admin-dashboard/products",
+      });
+      imageUrls.push(result.secure_url);
+    }
+  }
+
   const product = await Product.create({
     name,
     description,
@@ -125,6 +136,7 @@ const createProduct = asyncHandler(async (req, res) => {
     discountPercentage: discountPercentage || 0,
     stock: stock || 0,
     image: result.secure_url,
+    images: imageUrls,
   });
 
   if (product) {
@@ -146,6 +158,7 @@ const updateProduct = asyncHandler(async (req, res) => {
     category,
     brand,
     image,
+    images,
     discountPercentage,
     stock,
   } = req.body;
@@ -177,6 +190,17 @@ const updateProduct = asyncHandler(async (req, res) => {
         folder: "admin-dashboard/products",
       });
       product.image = result.secure_url;
+    }
+
+    if (images && images.length > 0) {
+      let imageUrls = [];
+      for (const img of images) {
+        const result = await cloudinary.uploader.upload(img, {
+          folder: "admin-dashboard/products",
+        });
+        imageUrls.push(result.secure_url);
+      }
+      product.images = imageUrls;
     }
 
     const updatedProduct = await product.save();
