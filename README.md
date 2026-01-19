@@ -1,6 +1,6 @@
 # 🛍️ BabyShop - Modern E-Commerce Platform
 
-![BabyShop Banner](https://drive.google.com/file/d/1a_MSzca0dwFhRtYCUU2Nwh2u8WNybWnW/view?usp=sharing)
+![BabyShop Banner](https://drive.google.com/uc?export=view&id=1a_MSzca0dwFhRtYCUU2Nwh2u8WNybWnW)
 
 > A full-stack, feature-rich e-commerce solution built with the latest web technologies. Designed for performance, scalability, and a premium user experience.
 
