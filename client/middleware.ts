@@ -1,91 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export async function middleware(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get("auth_token")?.value;
 
-  // Log token presence for debugging
-  console.log("Middleware: Token found:", !!token, { pathname });
-
-  // Verify token using /api/auth/profile
-  const verifyToken = async (token: string): Promise<boolean> => {
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
-
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api"
-        }/auth/profile`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          credentials: "include", // Match authApi's setup
-          signal: controller.signal,
-        }
-      );
-
-      clearTimeout(timeoutId);
-      console.log("Middleware: Profile response status:", response.status);
-      return response.ok;
-    } catch (error) {
-      console.error("Middleware: Token verification failed:", error);
-      // If it's a network error or timeout, assume token is valid to prevent unnecessary redirects
-      if (
-        error instanceof Error &&
-        (error.name === "AbortError" || error.message.includes("fetch"))
-      ) {
-        console.log(
-          "Middleware: Network error, allowing access with existing token"
-        );
-        return true; // Allow access if there's a network issue
-      }
-      return false;
-    }
-  };
-
-  // For success page, allow access if token exists (bypass verification to prevent Stripe redirect issues)
-  if (pathname === "/success") {
-    if (!token) {
-      const signInUrl = new URL("/auth/signin", request.url);
-      return NextResponse.redirect(signInUrl);
-    }
-    // Always allow access to success page if token exists to prevent Stripe redirect issues
-    return NextResponse.next();
-  }
-
-  const isAuthenticated = token ? await verifyToken(token) : false;
-  console.log("Middleware: isAuthenticated:", isAuthenticated);
-
-  // Protect /user routes
+  // ✅ Protect /user routes
   if (pathname.startsWith("/user")) {
     if (pathname === "/user/cart") {
-      // Allow access to cart page even if not authenticated
       return NextResponse.next();
     }
-    if (!isAuthenticated) {
-      console.log(
-        "Middleware: Redirecting unauthenticated user to /auth/signin"
-      );
-      const signInUrl = new URL("/auth/signin", request.url);
-      return NextResponse.redirect(signInUrl);
+
+    if (!token) {
+      return NextResponse.redirect(new URL("/auth/signin", request.url));
     }
   }
 
-  // Restrict /auth routes for authenticated users
-  if (pathname.startsWith("/auth")) {
-    if (isAuthenticated) {
-      console.log("Middleware: Redirecting authenticated user to /user");
-      const userUrl = new URL("/user/profile", request.url);
-      return NextResponse.redirect(userUrl);
-    }
+  // ✅ Prevent logged-in users from visiting /auth pages
+  if (pathname.startsWith("/auth") && token) {
+    return NextResponse.redirect(
+      new URL("/user/profile", request.url)
+    );
   }
 
+  // ✅ Allow everything else (including /)
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/user/:path*", "/auth/:path*", "/success"],
+  matcher: ["/user/:path*", "/auth/:path*"],
 };
