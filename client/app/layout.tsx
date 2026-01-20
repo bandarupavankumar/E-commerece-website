@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import type { Metadata } from "next";
 import "./globals.css";
 import Header from "../components/common/header/Header";
@@ -7,7 +9,7 @@ import AuthInitializer from "@/components/pages/auth/AuthInitializer";
 
 export const metadata: Metadata = {
   title: "Babyshop | Online shopping places",
-  description: "Babyshop for onlne shopping",
+  description: "Babyshop for online shopping",
 };
 
 export default function RootLayout({
@@ -17,10 +19,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`antialiased`}>
+      <body className="antialiased">
         <AuthInitializer />
         <Header />
-        <div className="bg-babyshopLightBg min-h-screen pb-20">{children}</div>
+        <div className="bg-babyshopLightBg min-h-screen pb-20">
+          {children}
+        </div>
         <Footer />
         <Toaster
           position="bottom-right"
